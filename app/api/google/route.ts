@@ -1,18 +1,20 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
-import { generateText } from 'ai';
+import { generateObject } from 'ai';
+import { z } from 'zod';
 
-export async function GET(request: Request) {
+export async function POST(request: Request) {
   const google = createGoogleGenerativeAI({
-    apiKey: process.env.GOOGLE_AI_API_KEY
+    apiKey: process.env.GOOGLE_AI_API_KEY,
   });
 
-  const { text } = await generateText({
-    model: google('models/gemini-pro'),
-    prompt: 'Write a poem about a cat sitting in a window.',
+  const { prompt } = await request.json();
+  console.log(prompt);
+
+  const result = await generateObject({
+    model: google('models/gemini-1.5-flash-latest'),
+    schema: z.object({ poem: z.string() }),
+    prompt: prompt,
   });
 
-  return new Response(JSON.stringify({ poem: text }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  return result.toJsonResponse();;
 }

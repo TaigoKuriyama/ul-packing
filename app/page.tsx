@@ -1,20 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { experimental_useObject as useObject } from 'ai/react';
+import { z } from 'zod';
 
-export default function YourComponent() {
-  const [poem, setPoem] = useState('');
-
-  const handleClick = async () => {
-    const response = await fetch('/api/google');
-    const data = await response.json();
-    setPoem(data.poem);
-  };
+export default function Page() {
+  const { object, submit } = useObject({
+    api: '/api/google',
+    schema: z.object({ poem: z.string() }),
+  });
+  console.log(object);
 
   return (
     <div>
-      <button onClick={handleClick}>Generate Poem</button>
-      {poem && <p>{poem}</p>}
+      <button onClick={() => submit({ prompt: '猫の詩を書いてください' })}>
+        詩を生成
+      </button>
+      {object?.poem && <p>{object?.poem}</p>}
     </div>
   );
 }
