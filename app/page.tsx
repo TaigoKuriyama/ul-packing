@@ -12,7 +12,7 @@ export default function Page() {
 
   return (
     <div>
-      <button onClick={() => submit({ prompt: '猫の詩を書いてください' })}>
+      <button onClick={() => submit({ prompt: '猫に関する1000文字程度の長文の詩を書いてください' })}>
         詩を生成
       </button>
       {object?.poem && <p>{object?.poem}</p>}
