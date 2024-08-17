@@ -1,6 +1,6 @@
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { generateObject } from 'ai';
-import { z } from 'zod';
+import { poemSchema } from './schema';
 
 export async function POST(request: Request) {
   const google = createGoogleGenerativeAI({
@@ -12,7 +12,7 @@ export async function POST(request: Request) {
 
   const result = await generateObject({
     model: google('models/gemini-1.5-flash-latest'),
-    schema: z.object({ poem: z.string() }),
+    schema: poemSchema,
     prompt: prompt,
   });
 
