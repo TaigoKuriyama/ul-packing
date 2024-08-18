@@ -18,7 +18,7 @@ export default function Page() {
     if (isLoading) {
       stop();
     } else {
-      submit({ prompt: '猫に関する1000文字程度の長文の詩を書いてください' });
+      submit({ prompt: '長文の詩を書いてください' });
     }
   };
 
@@ -28,7 +28,8 @@ export default function Page() {
         {isLoading ? 'STOP' : '詩を生成'}
       </Button>
       <div className="mt-4">
-        {object?.poem ? <p>{object.poem}</p> : <p>Loading...</p>}
+        {!object?.poem && isLoading && <p>Loading...</p>}
+        <p>{object?.poem || ''}</p>
       </div>
     </div>
   );
