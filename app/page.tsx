@@ -2,20 +2,35 @@
 
 import { experimental_useObject as useObject } from 'ai/react';
 import { z } from 'zod';
+import { Button } from "@/components/ui/button";
+
+const poemSchema = z.object({
+  poem: z.string(),
+});
 
 export default function Page() {
-  const { object, submit } = useObject({
+  const { submit, isLoading, object, stop } = useObject({
     api: '/api/google',
-    schema: z.object({ poem: z.string() }),
+    schema: poemSchema,
   });
-  console.log(object);
+
+  const handleSubmit = async () => {
+    if (isLoading) {
+      stop();
+    } else {
+      submit({ prompt: '長文の詩を書いてください' });
+    }
+  };
 
   return (
-    <div>
-      <button onClick={() => submit({ prompt: '猫に関する1000文字程度の長文の詩を書いてください' })}>
-        詩を生成
-      </button>
-      {object?.poem && <p>{object?.poem}</p>}
+    <div className="flex flex-col items-center min-h-screen p-4 m-4">
+      <Button onClick={handleSubmit}>
+        {isLoading ? 'STOP' : '詩を生成'}
+      </Button>
+      <div className="mt-4">
+        {!object?.poem && isLoading && <p>Loading...</p>}
+        <p>{object?.poem || ''}</p>
+      </div>
     </div>
   );
 }
